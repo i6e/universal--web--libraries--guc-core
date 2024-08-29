@@ -1,28 +1,72 @@
-import { Config } from "./types/Config";
+import { executionContext, ExecutionContext } from "./executionContext";
+import { Config, ConfigWithoutTypePlugins } from "./types/Config";
 import { CSSContent } from "./types/CSSContent";
+import { GUCClass } from "./types/GUCClass";
+import { TypePlugin } from "./types/TypePlugin";
+import { VariantPlugin } from "./types/VariantPlugin";
 
-export function cssContent<TTheme>(
+function classNameHandler<TTheme>(
   className: string,
-  config: Config<TTheme>
-): CSSContent[] {
-  const { plugins, ...configWithoutPlugins } = config;
-  let result: CSSContent[] | undefined;
-  for (const plugin of plugins) {
-    let contents = plugin.cssContent(className, configWithoutPlugins);
-    if (contents) {
-      if (result) {
-        throw new Error(
-          `Error: there are two or more plugins to process class: ${className}`
-        );
-      } else {
-        result = contents;
+  config: ConfigWithoutTypePlugins<TTheme>,
+  context: ExecutionContext<TTheme>
+): TypePlugin<TTheme> {
+  let valid = false;
+  for (const prefix in context.typePrefixes) {
+    if (className.slice(0, prefix.length) == prefix) {
+      for (const plugin of context.typePrefixes[prefix]!) {
+        if (plugin.isValidClass(className, config)) {
+          return plugin;
+        }
       }
     }
   }
-  if (!result) {
-    throw new Error(
-      `Error: failed to find appropriate plugin to process class: ${className}`
-    );
+  for (const plugin of context.typesWithoutPrefix) {
+    if (plugin.isValidClass(className, config)) {
+      return plugin;
+    }
   }
-  return result;
+  throw new Error("maybe unreachable");
+}
+
+function variantHandler<TTheme>(
+  variant: string,
+  config: ConfigWithoutTypePlugins<TTheme>,
+  context: ExecutionContext<TTheme>
+): VariantPlugin<TTheme> {
+  let valid = false;
+  for (const prefix in context.variantPrefixes) {
+    if (variant.slice(0, prefix.length) == prefix) {
+      for (const plugin of context.variantPrefixes[prefix]!) {
+        if (plugin.isValidVariant(variant, config)) {
+          return plugin;
+        }
+      }
+    }
+  }
+  for (const plugin of context.variantsWithoutPrefix) {
+    if (plugin.isValidVariant(variant, config)) {
+      return plugin;
+    }
+  }
+  throw new Error("maybe unreachable");
+}
+
+export function cssContent<TTheme>(
+  { className, variants }: GUCClass,
+  config: Config<TTheme>,
+  context: ExecutionContext<TTheme> = executionContext(config)
+): CSSContent[] {
+  const { typePlugins, variantPlugins, ...configWithoutPlugins } = config;
+  return variants.reduce<CSSContent[]>((contents, variant) => {
+    const plugin = variantHandler(variant, configWithoutPlugins, context);
+    const result: CSSContent[] = [];
+    for (const content of contents) {
+      if (content.couldAffectedByVariants) {
+        result.push(...plugin.process(content, variant, configWithoutPlugins));
+      } else {
+        result.push(content);
+      }
+    }
+    return result;
+  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, configWithoutPlugins) || []);
 }

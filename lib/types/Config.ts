@@ -1,10 +1,12 @@
-import { GUCPlugin } from "./GUCPlugin";
+import { TypePlugin } from "./TypePlugin";
+import { VariantPlugin } from "./VariantPlugin";
 
-export interface Config<TTheme> extends ConfigWithoutPlugins<TTheme> {
-  plugins: readonly GUCPlugin<TTheme>[];
+export interface Config<TTheme> extends ConfigWithoutTypePlugins<TTheme> {
+  typePlugins: readonly TypePlugin<TTheme>[];
+  variantPlugins: readonly VariantPlugin<TTheme>[];
 }
 
-export interface ConfigWithoutPlugins<TTheme> {
+export interface ConfigWithoutTypePlugins<TTheme> {
   prefix: string;
   theme: TTheme;
   allowArbitraryValue: boolean;

@@ -2,6 +2,7 @@ export interface CSSContent {
   media?: Media;
   selector: string;
   content: string;
+  couldAffectedByVariants: boolean;
 }
 
 export type Media = MediaCompound | MediaTerminal;
