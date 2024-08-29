@@ -1,6 +1,7 @@
 import { executionContext, ExecutionContext } from "./executionContext";
 import { Config, ConfigWithoutTypePlugins } from "./types/Config";
 import { GUCClass } from "./types/GUCClass";
+import { startsWith } from "./util/startsWith";
 import { stringToGUCClass } from "./util/stringToGUCClass";
 
 function isValidClassName<TTheme>(
@@ -10,7 +11,7 @@ function isValidClassName<TTheme>(
 ): boolean {
   let valid = false;
   for (const prefix in context.typePrefixes) {
-    if (className.slice(0, prefix.length) == prefix) {
+    if (startsWith(className, prefix)) {
       for (const plugin of context.typePrefixes[prefix]!) {
         if (plugin.isValidClass(className, config)) {
           markAsValid();
@@ -46,7 +47,7 @@ function isValidVariant<TTheme>(
 ): boolean {
   let valid = false;
   for (const prefix in context.variantPrefixes) {
-    if (variant.slice(0, prefix.length) == prefix) {
+    if (startsWith(variant, prefix)) {
       for (const plugin of context.variantPrefixes[prefix]) {
         if (plugin.isValidVariant(variant, config)) {
           markAsValid();

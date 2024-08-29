@@ -9,6 +9,7 @@ export interface TypePlugin<TTheme> {
   ) => boolean;
   cssContent: (
     className: string,
+    escapedFullClassName: string,
     config: ConfigWithoutTypePlugins<TTheme>
   ) => CSSContent[] | undefined;
 }

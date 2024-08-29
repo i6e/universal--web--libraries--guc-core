@@ -1,9 +1,11 @@
+import cssesc = require("cssesc");
 import { executionContext, ExecutionContext } from "./executionContext";
 import { Config, ConfigWithoutTypePlugins } from "./types/Config";
 import { CSSContent } from "./types/CSSContent";
 import { GUCClass } from "./types/GUCClass";
 import { TypePlugin } from "./types/TypePlugin";
 import { VariantPlugin } from "./types/VariantPlugin";
+import { GUCClassToString } from "./util/GUCClassToString";
 
 function classNameHandler<TTheme>(
   className: string,
@@ -52,11 +54,12 @@ function variantHandler<TTheme>(
 }
 
 export function cssContent<TTheme>(
-  { className, variants }: GUCClass,
+  gucClass: GUCClass,
   config: Config<TTheme>,
   context: ExecutionContext<TTheme> = executionContext(config)
 ): CSSContent[] {
   const { typePlugins, variantPlugins, ...configWithoutPlugins } = config;
+  const { className, variants } = gucClass;
   return variants.reduce<CSSContent[]>((contents, variant) => {
     const plugin = variantHandler(variant, configWithoutPlugins, context);
     const result: CSSContent[] = [];
@@ -68,5 +71,5 @@ export function cssContent<TTheme>(
       }
     }
     return result;
-  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, configWithoutPlugins) || []);
+  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, cssesc(GUCClassToString(gucClass)), configWithoutPlugins) || []);
 }
