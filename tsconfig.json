@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    // vscode
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // project
+    "outDir": "dist",
+    "incremental": true,
+    "skipLibCheck": true,
+
+    // strict
+    // TODO:
+
+    // package
+  },
+}
