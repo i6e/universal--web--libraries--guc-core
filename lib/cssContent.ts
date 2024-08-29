@@ -71,5 +71,5 @@ export function cssContent<TTheme>(
       }
     }
     return result;
-  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, cssesc(GUCClassToString(gucClass)), configWithoutPlugins) || []);
+  }, classNameHandler(className, configWithoutPlugins, context).cssContent(className, cssesc(GUCClassToString(gucClass), { isIdentifier: true }), configWithoutPlugins) || []);
 }
