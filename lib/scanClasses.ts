@@ -1,12 +1,12 @@
 import { executionContext, ExecutionContext } from "./executionContext";
-import { Config, ConfigWithoutTypePlugins } from "./types/Config";
+import { Config, ConfigWithoutPlugins } from "./types/Config";
 import { GUCClass } from "./types/GUCClass";
 import { startsWith } from "./util/startsWith";
 import { stringToGUCClass } from "./util/stringToGUCClass";
 
 function isValidClassName<TTheme>(
   className: string,
-  config: ConfigWithoutTypePlugins<TTheme>,
+  config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
 ): boolean {
   let valid = false;
@@ -42,7 +42,7 @@ function isValidClassName<TTheme>(
 
 function isValidVariant<TTheme>(
   variant: string,
-  config: ConfigWithoutTypePlugins<TTheme>,
+  config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
 ): boolean {
   let valid = false;
@@ -78,7 +78,7 @@ function isValidVariant<TTheme>(
 
 function isValidGUCClass<TTheme>(
   { className, variants }: GUCClass,
-  config: ConfigWithoutTypePlugins<TTheme>,
+  config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
 ): boolean {
   return (

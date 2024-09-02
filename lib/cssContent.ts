@@ -1,6 +1,6 @@
 import cssesc = require("cssesc");
 import { executionContext, ExecutionContext } from "./executionContext";
-import { Config, ConfigWithoutTypePlugins } from "./types/Config";
+import { Config, ConfigWithoutPlugins } from "./types/Config";
 import { CSSContent } from "./types/CSSContent";
 import { GUCClass } from "./types/GUCClass";
 import { TypePlugin } from "./types/TypePlugin";
@@ -9,7 +9,7 @@ import { GUCClassToString } from "./util/GUCClassToString";
 
 function classNameHandler<TTheme>(
   className: string,
-  config: ConfigWithoutTypePlugins<TTheme>,
+  config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
 ): TypePlugin<TTheme> {
   let valid = false;
@@ -32,7 +32,7 @@ function classNameHandler<TTheme>(
 
 function variantHandler<TTheme>(
   variant: string,
-  config: ConfigWithoutTypePlugins<TTheme>,
+  config: ConfigWithoutPlugins<TTheme>,
   context: ExecutionContext<TTheme>
 ): VariantPlugin<TTheme> {
   let valid = false;

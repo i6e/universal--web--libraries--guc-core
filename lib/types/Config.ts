@@ -1,12 +1,12 @@
 import { TypePlugin } from "./TypePlugin";
 import { VariantPlugin } from "./VariantPlugin";
 
-export interface Config<TTheme> extends ConfigWithoutTypePlugins<TTheme> {
+export interface Config<TTheme> extends ConfigWithoutPlugins<TTheme> {
   typePlugins: readonly TypePlugin<TTheme>[];
   variantPlugins: readonly VariantPlugin<TTheme>[];
 }
 
-export interface ConfigWithoutTypePlugins<TTheme> {
+export interface ConfigWithoutPlugins<TTheme> {
   prefix: string;
   theme: TTheme;
   allowArbitraryValue: boolean;
